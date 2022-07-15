@@ -18,7 +18,13 @@ __meta__ = {
 texture = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2( 0, 42 )
 shape = SubResource( 1 )
 
 [node name="Dice Power" type="Sprite" parent="."]
+visible = false
+
+[node name="Floor Detector" type="RayCast2D" parent="."]
+position = Vector2( 0, 128 )
+enabled = true
