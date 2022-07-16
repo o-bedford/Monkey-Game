@@ -4,6 +4,10 @@ export var GRAVITY = 30
 export var JUMP_SPEED = -900
 const WALK_SPEED = 100
 
+signal life_changed(player_hearts)
+var max_hearts: int = 3
+var hearts: float = max_hearts
+
 var normal_tex = load("res://assets/img/entity/player/playerTEMP.png")
 var hit_tex = load("res://assets/img/entity/player/playerTEMPHIT.png")
 
@@ -23,7 +27,8 @@ var Dice3
 
 func _ready():
 	$"Hitbox/Hit Shape".disabled = true
-
+	emit_signal("life_changed", max_hearts)
+	
 func _process(delta):
 	if dice_powers.size() > 6:
 		dice_powers.remove(0);
@@ -126,6 +131,12 @@ func pick_power():
 func get_powers():
 	return dice_powers
 
+func damage(dam: int):
+	hearts -= dam * 1
+	emit_signal("life_changed", hearts)
+	if hearts <= 0:
+		return "Player is dead"
 
 func _on_Hurtbox_body_entered(body):
-	pass # Replace with function body.
+	print("this is working")
+	damage(1)
