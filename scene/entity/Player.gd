@@ -78,26 +78,6 @@ func _physics_process(delta):
 		velocity.x += WALK_SPEED
 		if sign($Position2D.position.x) == -1:
 			$Position2D.position.x *= -1
-		
-	if Input.is_action_just_pressed("attack"):
-		# call pick_power, conditional statements for which power to use
-		"""pick_power()
-		if active_power == "fire":
-			var fireball = FIREBALL.instance()
-			if sign($Position2D.position.x) == 1:
-				fireball.set_fireball_direction(1)
-			else:
-				fireball.set_fireball_direction(-1)
-			get_parent().add_child(fireball)
-			fireball.position = $Position2D.global_position"""
-		# basic fireball functionality
-		var fireball = FIREBALL.instance()
-		if sign($Position2D.position.x) == 1:
-			fireball.set_fireball_direction(1)
-		else:
-			fireball.set_fireball_direction(-1)
-		get_parent().add_child(fireball)
-		fireball.position = $Position2D.global_position
 	
 	velocity = move_and_slide(velocity, Vector2.UP)
 	velocity.x = lerp(velocity.x, 0, 0.2)
@@ -132,6 +112,25 @@ func _input(event):
 		roll_screen.set_power(active_power)
 		get_parent().add_child(roll_screen)
 		can_move = false
+	if event.is_action_pressed("attack"):
+		# call pick_power, conditional statements for which power to use
+		"""pick_power()
+		if active_power == "fire":
+			var fireball = FIREBALL.instance()
+			if sign($Position2D.position.x) == 1:
+				fireball.set_fireball_direction(1)
+			else:
+				fireball.set_fireball_direction(-1)
+			get_parent().add_child(fireball)
+			fireball.position = $Position2D.global_position"""
+		# basic fireball functionality
+		var fireball = FIREBALL.instance()
+		if sign($Position2D.position.x) == 1:
+			fireball.set_fireball_direction(1)
+		else:
+			fireball.set_fireball_direction(-1)
+		get_parent().add_child(fireball)
+		fireball.position = $Position2D.global_position
 
 # Makes the game less annoying
 func coyoteTime():

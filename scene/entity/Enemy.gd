@@ -47,13 +47,18 @@ func squash():
 	is_squashed = false
 	
 func burn():
-	is_burning = true
-	var burn = BURN.instance()
-	get_parent().add_child(burn)
-	burn.position = $Position2D.global_position
-	yield(get_tree().create_timer(5), "timeout")
-	is_burning = false
-	get_parent().remove_child(burn)
+	if !is_burning:
+		is_burning = true
+		var burn_sprite = Sprite.new()
+		burn_sprite.texture = load("res://assets/img/entity/enemies/fireTEMP.png")
+#		var burn = BURN.instance()
+#		get_parent().add_child(burn)
+		add_child(burn_sprite)
+#		burn.position = $Position2D.global_position
+		yield(get_tree().create_timer(5), "timeout")
+		is_burning = false
+		remove_child(burn_sprite)
+#		get_parent().remove_child(burn)
 
 func set_facing():
 	if player.get_node("Walkbox").global_position.x < $CollisionShape2D.global_position.x - 22:
