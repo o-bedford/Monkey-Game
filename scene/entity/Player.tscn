@@ -48,5 +48,8 @@ limit_smoothed = true
 position = Vector2( 0, 10 )
 shape = SubResource( 3 )
 
+[node name="Position2D" type="Position2D" parent="."]
+position = Vector2( 72, 15 )
+
 [connection signal="body_entered" from="Hitbox" to="." method="_on_Area2D_body_entered"]
 [connection signal="body_entered" from="Hurtbox" to="." method="_on_Hurtbox_body_entered"]

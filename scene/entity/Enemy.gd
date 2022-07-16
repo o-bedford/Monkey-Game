@@ -11,6 +11,9 @@ var squash_count = 0
 var player
 var see_player = false
 
+var is_burning
+const BURN = preload("res://scene/entity/Burn.tscn")
+
 func _ready():
 	print(str(holding_power))
 	player = get_parent().get_node("Player")
@@ -42,6 +45,15 @@ func squash():
 	yield(get_tree().create_timer(1), "timeout")
 	$Sprite.scale.y = 1
 	is_squashed = false
+	
+func burn():
+	is_burning = true
+	var burn = BURN.instance()
+	get_parent().add_child(burn)
+	burn.position = $Position2D.global_position
+	yield(get_tree().create_timer(5), "timeout")
+	is_burning = false
+	get_parent().remove_child(burn)
 
 func set_facing():
 	if player.get_node("Walkbox").global_position.x < $CollisionShape2D.global_position.x - 22:

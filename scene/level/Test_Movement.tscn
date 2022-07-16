@@ -77,22 +77,22 @@ tile_data = PoolIntArray( 131095, 1, 0, 131096, 1, 0, 131097, 1, 0, 131098, 1, 0
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 271, 747 )
 
-[node name="Enemy" parent="." instance=ExtResource( 3 )]
+[node name="Enemy" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 1124, 703 )
 
-[node name="Enemy2" parent="." instance=ExtResource( 3 )]
+[node name="Enemy2" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 1976, 697 )
 
-[node name="Enemy3" parent="." instance=ExtResource( 3 )]
+[node name="Enemy3" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 3008, 612 )
 
-[node name="Enemy4" parent="." instance=ExtResource( 3 )]
+[node name="Enemy4" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 2730, 237 )
 
-[node name="Enemy5" parent="." instance=ExtResource( 3 )]
+[node name="Enemy5" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 1696, 474 )
 
-[node name="Enemy6" parent="." instance=ExtResource( 3 )]
+[node name="Enemy6" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 2357, 216 )
 holding_power = 3
 

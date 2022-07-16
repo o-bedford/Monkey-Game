@@ -29,6 +29,7 @@ var last_slot = 0
 var Dice1
 var Dice2
 var Dice3
+var FIREBALL = preload("res://scene/entity/Fireball.tscn")
 
 func _ready():
 	if dice_size == 0:
@@ -68,11 +69,35 @@ func _physics_process(delta):
 		$Hitbox.scale.x = -1
 		$"Player Sprite".flip_h = true
 		velocity.x -= WALK_SPEED
+		if sign($Position2D.position.x) == 1:
+			$Position2D.position.x *= -1
 		
 	if Input.is_action_pressed("ui_right") and can_move:
 		$Hitbox.scale.x = 1
 		$"Player Sprite".flip_h = false
 		velocity.x += WALK_SPEED
+		if sign($Position2D.position.x) == -1:
+			$Position2D.position.x *= -1
+		
+	if Input.is_action_just_pressed("attack"):
+		# call pick_power, conditional statements for which power to use
+		"""pick_power()
+		if active_power == "fire":
+			var fireball = FIREBALL.instance()
+			if sign($Position2D.position.x) == 1:
+				fireball.set_fireball_direction(1)
+			else:
+				fireball.set_fireball_direction(-1)
+			get_parent().add_child(fireball)
+			fireball.position = $Position2D.global_position"""
+		# basic fireball functionality
+		var fireball = FIREBALL.instance()
+		if sign($Position2D.position.x) == 1:
+			fireball.set_fireball_direction(1)
+		else:
+			fireball.set_fireball_direction(-1)
+		get_parent().add_child(fireball)
+		fireball.position = $Position2D.global_position
 	
 	velocity = move_and_slide(velocity, Vector2.UP)
 	velocity.x = lerp(velocity.x, 0, 0.2)
