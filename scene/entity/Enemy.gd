@@ -19,6 +19,7 @@ func _process(delta):
 		queue_free()
 
 func _physics_process(delta):
+	velocity.y += 30
 	if !is_squashed:
 		velocity.x = speed * facing
 	move_and_slide(velocity, Vector2.UP)

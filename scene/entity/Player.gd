@@ -15,6 +15,7 @@ var velocity = Vector2.ZERO
 var canJumpButMightNotBeTouchingGround = true
 var jumpJustPressed = false
 var hitCanBePressed = true
+var can_move = true
 
 var active_power
 
@@ -45,18 +46,18 @@ func _physics_process(delta):
 		coyoteTime()
 		velocity.y += GRAVITY
 	
-	if Input.is_action_just_pressed("ui_up"):
+	if Input.is_action_just_pressed("ui_up") and can_move:
 		jumpJustPressed = true;
 		rememberJumpTime()
 		if canJumpButMightNotBeTouchingGround:
 			velocity.y = JUMP_SPEED
 	
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed("ui_left") and can_move:
 		$Hitbox.scale.x = -1
 		$"Player Sprite".flip_h = true
 		velocity.x -= WALK_SPEED
 		
-	if Input.is_action_pressed("ui_right"):
+	if Input.is_action_pressed("ui_right") and can_move:
 		$Hitbox.scale.x = 1
 		$"Player Sprite".flip_h = false
 		velocity.x += WALK_SPEED
@@ -66,7 +67,7 @@ func _physics_process(delta):
 
 func _input(event):
 	# If the player is able to cube smash, do it. Hide dice face sprites, apply hit texture, wait a bit, and reset
-	if event.is_action_pressed("steal_attack") and hitCanBePressed:
+	if event.is_action_pressed("steal_attack") and hitCanBePressed and can_move:
 		$"Hitbox/Hit Shape".disabled = false
 		hitCanBePressed = false
 		if Dice1 is Sprite:
@@ -88,6 +89,10 @@ func _input(event):
 		setDiceSprites()
 		print(str(dice_powers))
 		$"Hitbox/Hit Shape".disabled = true
+	if event.is_action_pressed("roll_dice") and can_move:
+		var roll_screen = load("res://scene/GUI/RollScreen.tscn").instance()
+		get_parent().add_child(roll_screen)
+		can_move = false
 
 # Makes the game less annoying
 func coyoteTime():
