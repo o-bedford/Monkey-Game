@@ -125,3 +125,7 @@ func pick_power():
 
 func get_powers():
 	return dice_powers
+
+
+func _on_Hurtbox_body_entered(body):
+	pass # Replace with function body.
