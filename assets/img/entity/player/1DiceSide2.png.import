@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/fireDiceSide3.png-27bbaf78df1a761348a00cb699b764cb.stex"
+path="res://.import/1DiceSide2.png-4998da48bd473cae57eac0104cdf0a65.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/img/entity/player/fireDiceSide3.png"
-dest_files=[ "res://.import/fireDiceSide3.png-27bbaf78df1a761348a00cb699b764cb.stex" ]
+source_file="res://assets/img/entity/player/1DiceSide2.png"
+dest_files=[ "res://.import/1DiceSide2.png-4998da48bd473cae57eac0104cdf0a65.stex" ]
 
 [params]
 

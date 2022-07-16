@@ -6,13 +6,20 @@ var facing
 
 export(int, "Fire", "Elec", "Rock", "Midas") var holding_power
 
+var is_squashed
+var squash_count = 0
+
 func _ready():
 	randomize()
 	facing = -1
 	holding_power = 1
 
+func _process(delta):
+	if squash_count > 2:
+		queue_free()
+
 func _physics_process(delta):
-	if !is_on_wall():
+	if !is_squashed:
 		velocity.x = speed * facing
 	move_and_slide(velocity, Vector2.UP)
 	if is_on_wall():
@@ -20,3 +27,12 @@ func _physics_process(delta):
 
 func get_power():
 	return holding_power
+
+func squash():
+	squash_count += 1
+	is_squashed = true
+	$Sprite.scale.y = 0.25
+	velocity.x = 0
+	yield(get_tree().create_timer(1), "timeout")
+	$Sprite.scale.y = 1
+	is_squashed = false
