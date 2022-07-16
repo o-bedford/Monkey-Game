@@ -4,6 +4,8 @@ export var GRAVITY = 30
 export var JUMP_SPEED = -900
 const WALK_SPEED = 100
 
+export(int, "d4", "d6", "d8", "d10") var dice_size
+
 signal life_changed(player_hearts)
 var max_hearts: int = 3
 var hearts: float = max_hearts
@@ -16,17 +18,27 @@ var canJumpButMightNotBeTouchingGround = true
 var jumpJustPressed = false
 var hitCanBePressed = true
 var can_move = true
+var can_roll = false
 
 var active_power
 
 var enemies_has_hit = []
 
-var dice_powers = []
+var dice_powers
+var last_slot = 0
 var Dice1
 var Dice2
 var Dice3
 
 func _ready():
+	if dice_size == 0:
+		dice_powers = [-1,-1,-1,-1]
+	elif dice_size == 1:
+		dice_powers = [-1,-1,-1,-1,-1,-1]
+	elif dice_size == 2:
+		dice_powers = [-1,-1,-1,-1,-1,-1,-1,-1]
+	elif dice_powers == 3:
+		dice_powers = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 	$"Hitbox/Hit Shape".disabled = true
 	emit_signal("life_changed", max_hearts)
 	
@@ -89,8 +101,10 @@ func _input(event):
 		setDiceSprites()
 		print(str(dice_powers))
 		$"Hitbox/Hit Shape".disabled = true
-	if event.is_action_pressed("roll_dice") and can_move:
+	if event.is_action_pressed("roll_dice") and can_move and can_roll:
 		var roll_screen = load("res://scene/GUI/RollScreen.tscn").instance()
+		active_power = pick_power()
+		roll_screen.set_power(active_power)
 		get_parent().add_child(roll_screen)
 		can_move = false
 
@@ -105,9 +119,15 @@ func rememberJumpTime():
 
 func _on_Area2D_body_entered(body):
 	if body.has_method("get_power"):
-		print(body.get_power())
+		print(body.holding_power)
 		if !enemies_has_hit.has(body):
-			dice_powers.append(body.get_power())
+			if last_slot < 6:
+				dice_powers[last_slot] = body.get_power()
+				last_slot += 1
+			else:
+				dice_powers.remove(0)
+				dice_powers.append(body.get_power())
+			can_roll = true
 		body.squash()
 		enemies_has_hit.append(body)
 

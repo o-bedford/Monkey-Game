@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-var speed = 40
+var speed = 60
 var velocity = Vector2.ZERO
 var facing
 
@@ -8,22 +8,27 @@ export(int, "Fire", "Elec", "Rock", "Midas") var holding_power
 
 var is_squashed
 var squash_count = 0
+var player
+var see_player = false
 
 func _ready():
+	print(str(holding_power))
+	player = get_parent().get_node("Player")
 	randomize()
 	facing = -1
-	holding_power = 1
 
 func _process(delta):
 	if squash_count > 2:
 		queue_free()
 
 func _physics_process(delta):
-	velocity.y += 30
-	if !is_squashed:
+	set_facing()
+	if !is_on_floor():
+		velocity.y += 30
+	if !is_squashed and is_on_floor():
 		velocity.x = speed * facing
 	move_and_slide(velocity, Vector2.UP)
-	if is_on_wall():
+	if is_on_wall() and !see_player:
 		facing *= -1
 
 func get_power():
@@ -37,3 +42,22 @@ func squash():
 	yield(get_tree().create_timer(1), "timeout")
 	$Sprite.scale.y = 1
 	is_squashed = false
+
+func set_facing():
+	if player.get_node("Walkbox").global_position.x < $CollisionShape2D.global_position.x - 22:
+		if $CollisionShape2D.global_position.x - player.get_node("Walkbox").global_position.x < 300:
+#			print("enemy pos: " + str($CollisionShape2D.global_position.x) + "player pos: " + str(player.get_node("Walkbox").global_position.x))
+			facing = -1
+			see_player = true
+		else:
+			see_player = false
+#		print("in range! left")
+	elif player.get_node("Walkbox").global_position.x > $CollisionShape2D.global_position.x - 22:
+		if player.get_node("Walkbox").global_position.x - $CollisionShape2D.global_position.x < 300:
+			facing = 1
+			see_player = true
+		else:
+			see_player = false
+#		print("in range! right")
+	else:
+		see_player = false

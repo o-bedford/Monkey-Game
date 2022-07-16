@@ -1,13 +1,38 @@
 extends Control
 
+var fire_tex = load("res://assets/img/GUI/fireTEMP.png")
+
 func _ready():
 	$ColorRect.color = Color(0,0,0,0)
-	$AnimationPlayer.play("Fade In")
+	$"Background Anim".play("Fade In")
+	$Dice/Power.visible = false
+	$Dice/Dice.visible = false
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == "Fade In":
-		yield(get_tree().create_timer(2), "timeout")
-		$AnimationPlayer.play("Fade Out")
+		$Dice/Dice.visible = true
+		$DiceRoll.play("d4Roll")
+		show_power()
 	if anim_name == "Fade Out":
 		get_parent().get_node("Player").can_move = true
+		$Dice/Dice.visible = false
+		$Dice/Power.visible = false
+
+func set_power(power):
+	if power == 0:
+		$Dice/Power.texture = fire_tex
+		
+
+func _on_DiceRoll_animation_finished(anim_name):
+	if anim_name == "d4Roll":
+		$"Background Anim".play("Fade Out")
+
+
+func _on_Power_Anim_animation_finished(anim_name):
+	$Dice/Power.visible = false
+
+func show_power():
+	$Dice/Power.visible = true
+	yield(get_tree().create_timer(1), "timeout")
+	$"Power Anim".play("Power Pop")
