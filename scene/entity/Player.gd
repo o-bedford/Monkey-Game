@@ -12,6 +12,10 @@ var canJumpButMightNotBeTouchingGround = true
 var jumpJustPressed = false
 var hitCanBePressed = true
 
+var active_power
+
+var enemies_has_hit = []
+
 var dice_powers = []
 var Dice1
 var Dice2
@@ -43,9 +47,13 @@ func _physics_process(delta):
 			velocity.y = JUMP_SPEED
 	
 	if Input.is_action_pressed("ui_left"):
+		$Hitbox.scale.x = -1
+		$"Player Sprite".flip_h = true
 		velocity.x -= WALK_SPEED
 		
 	if Input.is_action_pressed("ui_right"):
+		$Hitbox.scale.x = 1
+		$"Player Sprite".flip_h = false
 		velocity.x += WALK_SPEED
 	
 	velocity = move_and_slide(velocity, Vector2.UP)
@@ -88,17 +96,17 @@ func rememberJumpTime():
 func _on_Area2D_body_entered(body):
 	if body.has_method("get_power"):
 		print(body.get_power())
-		dice_powers.append(body.get_power())
+		if !enemies_has_hit.has(body):
+			dice_powers.append(body.get_power())
 		body.squash()
+		enemies_has_hit.append(body)
 
 func setDiceSprites():
-	
 	if dice_powers.size() > 0 && dice_powers[0] != null:
 		if !Dice1 is Sprite:
 			Dice1 = Sprite.new()
 		Dice1.texture = load("res://assets/img/entity/player/" + str(dice_powers[0]) + "DiceSide1.png")
 		add_child(Dice1)
-		
 	if dice_powers.size() > 1 && dice_powers[1] != null:
 		if !Dice2 is Sprite:
 			Dice2 = Sprite.new()
@@ -109,4 +117,11 @@ func setDiceSprites():
 			Dice3 = Sprite.new()
 		Dice3.texture = load("res://assets/img/entity/player/" + str(dice_powers[2]) + "DiceSide3.png")
 		add_child(Dice3)
-	
+
+func pick_power():
+	# If array is not null, set active power to a random value
+	if dice_powers.size() > 0:
+		active_power = dice_powers[randi() % dice_powers.size()]
+
+func get_powers():
+	return dice_powers
