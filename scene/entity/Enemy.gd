@@ -11,6 +11,7 @@ var is_squashed
 var squash_count = 0
 var player
 var see_player = false
+var can_attack = true
 
 var is_shocked = false
 var is_burning = false
@@ -52,11 +53,15 @@ func get_power():
 	return holding_power
 
 func squash():
-	squash_count += 1
+	health -= 1
+	if health <= 0:
+		death()
+	speed = 0
 	is_squashed = true
 	$Sprite.scale.y = 0.25
 	velocity.x = 0
-	yield(get_tree().create_timer(1), "timeout")
+	yield(get_tree().create_timer(0.4), "timeout")
+	speed = 60
 	$Sprite.scale.y = 1
 	is_squashed = false
 	
@@ -79,12 +84,20 @@ func burn():
 
 func shock():
 	if !is_shocked:
+		speed = 0
 		is_shocked = true
+		can_attack = false
+		health -= 1
+		if health <= 0:
+			death()
 		var shock_sprite = Sprite.new()
 		shock_sprite.texture = load("res://assets/img/entity/enemies/electricityTEMP.png")
 		add_child(shock_sprite)
-		
-		
+		yield(get_tree().create_timer(2), "timeout")
+		can_attack = true
+		speed = 60
+		is_shocked = false
+		remove_child(shock_sprite)
 
 func set_facing():
 	if player.get_node("Walkbox").global_position.x < $CollisionShape2D.global_position.x - 22:
