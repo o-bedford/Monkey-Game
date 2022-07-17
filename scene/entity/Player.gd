@@ -189,7 +189,7 @@ func damage(dam: int):
 	hearts -= dam * 1
 	emit_signal("life_changed", hearts)
 	if hearts <= 0:
-		return "Player is dead"
+		get_tree().change_scene("res://scene/Menu Scene/Death_menu/death_menu.tscn")
 
 func _on_Hurtbox_body_entered(body):
 	print("this is working")
