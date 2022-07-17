@@ -49,8 +49,7 @@ func _ready():
 		dice_powers = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 	$"Hitbox/Hit Shape".disabled = true
 	emit_signal("life_changed", max_hearts)
-	#DELETE THIS LATER THIS IS TO TEST
-	active_power = 1
+	
 func _process(delta):
 	if dice_powers.size() > 6:
 		dice_powers.remove(0);
@@ -215,8 +214,9 @@ func damage(dam: int):
 		get_tree().change_scene("res://scene/Menu Scene/Death_menu/death_menu.tscn")
 
 func _on_Hurtbox_body_entered(body):
-	print("this is working")
-	damage(1)
+#	print("this is working")
+#	damage(1)
+	pass
 
 
 func _on_Hitbox_body_entered(body):

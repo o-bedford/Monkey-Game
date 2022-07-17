@@ -5,6 +5,7 @@ var elec_tex = preload("res://assets/img/entity/player/elecballTEMP.png")
 var no_power = preload("res://assets/img/GUI/noPowerTEMP.png")
 var d4 = preload("res://assets/img/GUI/d4RollSheet_slim.png")
 var d6 = preload("res://assets/img/GUI/d6RollSheet_slim.png")
+var d8 = preload("res://assets/img/GUI/d8RollSheet_slim.png")
 
 func _ready():
 	$ColorRect.color = Color(0,0,0,0)
@@ -36,6 +37,8 @@ func set_dice(dice):
 		$Dice/Dice.texture = d4
 	if dice == 1:
 		$Dice/Dice.texture = d6
+	if dice == 2:
+		$Dice/Dice.texture = d8
 
 func _on_DiceRoll_animation_finished(anim_name):
 	if anim_name == "d4Roll":

@@ -444,6 +444,7 @@ texture = ExtResource( 11 )
 
 [node name="Weed8" type="Sprite" parent="Decoration"]
 position = Vector2( 4715, 559 )
+rotation = 0.17242
 scale = Vector2( 2, 2 )
 texture = ExtResource( 11 )
 
@@ -501,6 +502,7 @@ position = Vector2( 8065, 379 )
 texture = ExtResource( 13 )
 
 [node name="Lights" type="Node2D" parent="."]
+visible = false
 
 [node name="Light2D" type="Light2D" parent="Lights"]
 position = Vector2( 370, 224 )
