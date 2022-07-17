@@ -11,18 +11,16 @@ var squash_count = 0
 var player
 var see_player = false
 
-var is_shocked = false
 var is_burning = false
 const BURN = preload("res://scene/entity/Burn.tscn")
 
-<<<<<<< HEAD
 var midas_state = false
-=======
+
+var is_shocked = false
 var ELECTRIC_BALL = preload("res://scene/entity/ElectricBall.tscn")
 
 var t = 0.0
 var target
->>>>>>> 3eba442804ef634885a3f65e48378960b949b0ef
 
 func _ready():
 	print(str(holding_power))
