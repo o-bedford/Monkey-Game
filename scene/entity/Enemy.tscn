@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scene/entity/Enemy.gd" type="Script" id=1]
 [ext_resource path="res://assets/img/entity/enemies/enemyTEMP.png" type="Texture" id=2]
@@ -6,8 +6,13 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 109.5, 104.5 )
 
+[sub_resource type="CircleShape2D" id=2]
+radius = 436.194
+
 [node name="Enemy" type="KinematicBody2D"]
-position = Vector2( 662, 411 )
+position = Vector2( 590, 429 )
+collision_layer = 4
+collision_mask = 13
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
@@ -21,3 +26,14 @@ position = Vector2( -8.5, 12.5 )
 shape = SubResource( 1 )
 
 [node name="Position2D" type="Position2D" parent="."]
+
+[node name="Shock Field" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 4
+
+[node name="Collision" type="CollisionShape2D" parent="Shock Field"]
+shape = SubResource( 2 )
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+
+[connection signal="body_entered" from="Shock Field" to="." method="_on_Shock_Field_body_entered"]

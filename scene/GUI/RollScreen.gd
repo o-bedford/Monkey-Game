@@ -1,6 +1,8 @@
 extends Control
 
-var fire_tex = load("res://assets/img/GUI/fireTEMP.png")
+var fire_tex = preload("res://assets/img/GUI/fireTEMP.png")
+var elec_tex = preload("res://assets/img/entity/player/elecballTEMP.png")
+var no_power = preload("res://assets/img/GUI/noPowerTEMP.png")
 
 func _ready():
 	$ColorRect.color = Color(0,0,0,0)
@@ -15,14 +17,17 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		$DiceRoll.play("d4Roll")
 		show_power()
 	if anim_name == "Fade Out":
-		get_parent().get_node("Player").can_move = true
+		get_parent().get_parent().get_node("Player").can_move = true
 		$Dice/Dice.visible = false
 		$Dice/Power.visible = false
 
 func set_power(power):
+	if power == -1:
+		$Dice/Power.texture = no_power
 	if power == 0:
 		$Dice/Power.texture = fire_tex
-		
+	if power == 1:
+		$Dice/Power.texture = elec_tex
 
 func _on_DiceRoll_animation_finished(anim_name):
 	if anim_name == "d4Roll":

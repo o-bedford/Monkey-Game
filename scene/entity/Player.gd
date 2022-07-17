@@ -30,6 +30,7 @@ var Dice1
 var Dice2
 var Dice3
 var FIREBALL = preload("res://scene/entity/Fireball.tscn")
+var ELECTRIC_BALL = preload("res://scene/entity/ElectricBall.tscn")
 
 func _ready():
 	if dice_size == 0:
@@ -50,12 +51,12 @@ func _process(delta):
 func _physics_process(delta):
 	
 	# Movement code
-	if is_on_floor():
+	if is_on_floor() && can_move:
 		canJumpButMightNotBeTouchingGround = true
 		if jumpJustPressed:
 			velocity.y = JUMP_SPEED
 	
-	if !is_on_floor():
+	if !is_on_floor() && can_move:
 		coyoteTime()
 		velocity.y += GRAVITY
 	
@@ -78,29 +79,10 @@ func _physics_process(delta):
 		velocity.x += WALK_SPEED
 		if sign($Position2D.position.x) == -1:
 			$Position2D.position.x *= -1
-		
-	if Input.is_action_just_pressed("attack"):
-		# call pick_power, conditional statements for which power to use
-		"""pick_power()
-		if active_power == "fire":
-			var fireball = FIREBALL.instance()
-			if sign($Position2D.position.x) == 1:
-				fireball.set_fireball_direction(1)
-			else:
-				fireball.set_fireball_direction(-1)
-			get_parent().add_child(fireball)
-			fireball.position = $Position2D.global_position"""
-		# basic fireball functionality
-		var fireball = FIREBALL.instance()
-		if sign($Position2D.position.x) == 1:
-			fireball.set_fireball_direction(1)
-		else:
-			fireball.set_fireball_direction(-1)
-		get_parent().add_child(fireball)
-		fireball.position = $Position2D.global_position
 	
-	velocity = move_and_slide(velocity, Vector2.UP)
-	velocity.x = lerp(velocity.x, 0, 0.2)
+	if can_move:
+		velocity = move_and_slide(velocity, Vector2.UP)
+		velocity.x = lerp(velocity.x, 0, 0.2)
 
 func _input(event):
 	# If the player is able to cube smash, do it. Hide dice face sprites, apply hit texture, wait a bit, and reset
@@ -128,10 +110,34 @@ func _input(event):
 		$"Hitbox/Hit Shape".disabled = true
 	if event.is_action_pressed("roll_dice") and can_move and can_roll:
 		var roll_screen = load("res://scene/GUI/RollScreen.tscn").instance()
-		active_power = pick_power()
-		roll_screen.set_power(active_power)
+		pick_power()
+		roll_screen.get_node("Roll Screen").set_power(active_power)
 		get_parent().add_child(roll_screen)
 		can_move = false
+	if event.is_action_pressed("attack"):
+		# call pick_power, conditional statements for which power to use
+		if active_power == 0:
+			# basic fireball functionality
+			var fireball = FIREBALL.instance()
+			if sign($Position2D.position.x) == 1:
+				fireball.set_fireball_direction(1)
+			else:
+				fireball.set_fireball_direction(-1)
+			get_parent().add_child(fireball)
+			fireball.position = $Position2D.global_position
+		if active_power == 1:
+			var elecball = ELECTRIC_BALL.instance()
+			var direction
+			if sign($Position2D.position.x) == 1:
+				direction = 1
+			else:
+				direction = -1
+			elecball.linear_velocity.x = direction * 900
+			elecball.linear_velocity.y = -400
+			get_parent().add_child(elecball)
+			elecball.position = $Position2D.global_position
+			
+
 
 # Makes the game less annoying
 func coyoteTime():
@@ -146,7 +152,7 @@ func _on_Area2D_body_entered(body):
 	if body.has_method("get_power"):
 		print(body.holding_power)
 		if !enemies_has_hit.has(body):
-			if last_slot < 6:
+			if last_slot < dice_powers.size():
 				dice_powers[last_slot] = body.get_power()
 				last_slot += 1
 			else:
@@ -177,9 +183,7 @@ func pick_power():
 	# If array is not null, set active power to a random value
 	if dice_powers.size() > 0:
 		active_power = dice_powers[randi() % dice_powers.size()]
-
-func get_powers():
-	return dice_powers
+		print(str(dice_powers[randi() % dice_powers.size()]))
 
 func damage(dam: int):
 	hearts -= dam * 1

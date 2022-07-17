@@ -11,10 +11,18 @@ var squash_count = 0
 var player
 var see_player = false
 
-var is_burning
+var is_shocked = false
+var is_burning = false
 const BURN = preload("res://scene/entity/Burn.tscn")
 
+<<<<<<< HEAD
 var midas_state = false
+=======
+var ELECTRIC_BALL = preload("res://scene/entity/ElectricBall.tscn")
+
+var t = 0.0
+var target
+>>>>>>> 3eba442804ef634885a3f65e48378960b949b0ef
 
 func _ready():
 	print(str(holding_power))
@@ -27,6 +35,7 @@ func _process(delta):
 		velocity = Vector2.ZERO
 	if squash_count > 2:
 		queue_free()
+				
 
 func _physics_process(delta):
 	set_facing()
@@ -51,13 +60,27 @@ func squash():
 	is_squashed = false
 	
 func burn():
-	is_burning = true
-	var burn = BURN.instance()
-	get_parent().add_child(burn)
-	burn.position = $Position2D.global_position
-	yield(get_tree().create_timer(5), "timeout")
-	is_burning = false
-	get_parent().remove_child(burn)
+	if !is_burning:
+		is_burning = true
+		var burn_sprite = Sprite.new()
+		burn_sprite.texture = load("res://assets/img/entity/enemies/fireTEMP.png")
+#		var burn = BURN.instance()
+#		get_parent().add_child(burn)
+		add_child(burn_sprite)
+#		burn.position = $Position2D.global_position
+		yield(get_tree().create_timer(5), "timeout")
+		is_burning = false
+		remove_child(burn_sprite)
+#		get_parent().remove_child(burn)
+
+func shock():
+	if !is_shocked:
+		is_shocked = true
+		var shock_sprite = Sprite.new()
+		shock_sprite.texture = load("res://assets/img/entity/enemies/electricityTEMP.png")
+		add_child(shock_sprite)
+		
+		
 
 func set_facing():
 	if player.get_node("Walkbox").global_position.x < $CollisionShape2D.global_position.x - 22:
@@ -77,3 +100,11 @@ func set_facing():
 #		print("in range! right")
 	else:
 		see_player = false
+
+func _on_Shock_Field_body_entered(body):
+	if body.has_method("shock") && is_shocked && !body.is_shocked:
+		if body.get_node("VisibilityNotifier2D").is_on_screen():
+			var second_shock = ELECTRIC_BALL.instance()
+			second_shock.position = $CollisionShape2D.global_position
+			get_parent().add_child(second_shock)
+			second_shock.linear_velocity = Vector2(12000 * cos(get_angle_to(body.position)), 12000 * sin(get_angle_to(body.position)))
