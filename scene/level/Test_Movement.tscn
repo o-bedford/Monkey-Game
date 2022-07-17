@@ -81,22 +81,26 @@ position = Vector2( 271, 747 )
 
 [node name="Enemy" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 1124, 703 )
+holding_power = 2
 
 [node name="Enemy2" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 1976, 697 )
 
 [node name="Enemy3" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 3008, 612 )
+holding_power = 1
 
 [node name="Enemy4" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 2730, 237 )
+holding_power = 1
 
 [node name="Enemy5" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 1696, 474 )
-holding_power = 1
+holding_power = 2
 
 [node name="Enemy6" parent="." groups=["Enemies"] instance=ExtResource( 3 )]
 position = Vector2( 2357, 216 )
+holding_power = 2
 
 [node name="UI" type="CanvasLayer" parent="."]
 
