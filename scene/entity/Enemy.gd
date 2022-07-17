@@ -21,8 +21,6 @@ const BURN = preload("res://scene/entity/Burn.tscn")
 
 var midas_state = false
 
-var is_shocked = false
-
 var ELECTRIC_BALL = preload("res://scene/entity/ElectricBall.tscn")
 
 var t = 0.0
@@ -96,18 +94,15 @@ func shock():
 		var shock_sprite = Sprite.new()
 		shock_sprite.texture = load("res://assets/img/entity/enemies/electricityTEMP.png")
 		add_child(shock_sprite)
-<<<<<<< HEAD
-		
-func freeze():
-	velocity = Vector2.ZERO
-	print("freeze")
-=======
 		yield(get_tree().create_timer(2), "timeout")
 		can_attack = true
 		speed = 60
 		is_shocked = false
 		remove_child(shock_sprite)
->>>>>>> 2c1271e25b4e82c7f249c3655f1aecc26c2afa83
+
+func freeze():
+	velocity = Vector2.ZERO
+	print("freeze")
 
 func set_facing():
 	if player.get_node("Walkbox").global_position.x < $CollisionShape2D.global_position.x - 22:
