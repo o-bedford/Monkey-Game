@@ -3,7 +3,7 @@ extends KinematicBody2D
 var speed = 60
 var velocity = Vector2.ZERO
 var facing
-var health = 2
+var health = 3
 
 var holding_power = 0
 
@@ -156,3 +156,12 @@ func _on_AnimationPlayer_animation_started(anim_name):
 		yield(get_tree().create_timer(.05), "timeout")
 		modulate = Color(1,1,1,1)
 		speed = 60
+
+func hit():
+	$AttackDetector.monitoring = true
+
+func end_of_hit():
+	$AttackDetector.monitoring = false
+
+func start_walk(): 
+	$AnimationPlayer.play("run")

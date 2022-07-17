@@ -43,12 +43,13 @@ func _process(delta):
 	if see_player and !launching:
 		launching = true
 		velocity.x = 0
-		var fireball = FIREBALL.instance()
-		fireball.set_fireball_direction(facing)
-		fireball.set_collision_mask_bit(3, false)
-		fireball.set_collision_mask_bit(2, true)
-		get_parent().add_child(fireball)
-		fireball.position = $Position2D.global_position
+		#this needs to be fixed, hits itself rn
+		var electricball = ELECTRIC_BALL.instance()
+		electricball.set_direction(facing)
+		electricball.set_collision_mask_bit(3, false)
+		electricball.set_collision_mask_bit(2, true)
+		get_parent().add_child(electricball)
+		electricball.position = $Position2D.global_position
 		yield(get_tree().create_timer(2), "timeout")
 		launching = false
 	if facing == -1:

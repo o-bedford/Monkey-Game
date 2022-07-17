@@ -3,7 +3,7 @@ extends KinematicBody2D
 var speed = 60
 var velocity = Vector2.ZERO
 var facing
-var health = 2
+var health = 3
 
 var holding_power = 0
 
@@ -43,6 +43,7 @@ func _process(delta):
 	if see_player and !launching:
 		launching = true
 		velocity.x = 0
+		#not a fireball i just dont wanna ch
 		var fireball = FIREBALL.instance()
 		fireball.set_fireball_direction(facing)
 		fireball.set_collision_mask_bit(3, false)

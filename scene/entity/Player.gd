@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 export var GRAVITY = 30
 export var JUMP_SPEED = -900
-const WALK_SPEED = 100
+var WALK_SPEED = 100
 
 export(int, "d4", "d6", "d8", "d10") var dice_size
 
@@ -11,7 +11,9 @@ var max_hearts: int = 3
 var hearts: float = max_hearts
 
 var normal_tex = load("res://assets/img/entity/player/playerTEMP.png")
-var hit_tex = load("res://assets/img/entity/player/playerTEMPHIT.png")
+#var hit_tex = load("res://assets/img/entity/player/playerTEMPHIT.png")
+var hit_tex = load("res://assets/Animations/Player_animations/ezgif.com-gif-maker.png")
+
 
 var velocity = Vector2.ZERO
 var knockback = Vector2.ZERO
@@ -125,7 +127,9 @@ func _input(event):
 		if Dice3 is Sprite:
 			Dice3.visible = false
 		$"Player Sprite".texture = hit_tex
+		WALK_SPEED = 30
 		yield(get_tree().create_timer(0.4), "timeout")
+		WALK_SPEED = 100
 		$"Player Sprite".texture = normal_tex
 		if Dice1 is Sprite:
 			Dice1.visible = true
