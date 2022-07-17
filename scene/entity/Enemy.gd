@@ -11,8 +11,14 @@ var squash_count = 0
 var player
 var see_player = false
 
-var is_burning
+var is_shocked = false
+var is_burning = false
 const BURN = preload("res://scene/entity/Burn.tscn")
+
+var ELECTRIC_BALL = preload("res://scene/entity/ElectricBall.tscn")
+
+var t = 0.0
+var target
 
 func _ready():
 	print(str(holding_power))
@@ -23,6 +29,7 @@ func _ready():
 func _process(delta):
 	if squash_count > 2:
 		queue_free()
+				
 
 func _physics_process(delta):
 	set_facing()
@@ -60,6 +67,15 @@ func burn():
 		remove_child(burn_sprite)
 #		get_parent().remove_child(burn)
 
+func shock():
+	if !is_shocked:
+		is_shocked = true
+		var shock_sprite = Sprite.new()
+		shock_sprite.texture = load("res://assets/img/entity/enemies/electricityTEMP.png")
+		add_child(shock_sprite)
+		
+		
+
 func set_facing():
 	if player.get_node("Walkbox").global_position.x < $CollisionShape2D.global_position.x - 22:
 		if $CollisionShape2D.global_position.x - player.get_node("Walkbox").global_position.x < 300:
@@ -78,3 +94,11 @@ func set_facing():
 #		print("in range! right")
 	else:
 		see_player = false
+
+func _on_Shock_Field_body_entered(body):
+	if body.has_method("shock") && is_shocked && !body.is_shocked:
+		if body.get_node("VisibilityNotifier2D").is_on_screen():
+			var second_shock = ELECTRIC_BALL.instance()
+			second_shock.position = $CollisionShape2D.global_position
+			get_parent().add_child(second_shock)
+			second_shock.linear_velocity = Vector2(12000 * cos(get_angle_to(body.position)), 12000 * sin(get_angle_to(body.position)))

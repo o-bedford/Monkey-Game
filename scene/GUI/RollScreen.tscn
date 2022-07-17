@@ -397,17 +397,19 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.5, 1.5, 2 )
 }
 
-[node name="Roll Screen" type="Control"]
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Roll Screen" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="Roll Screen"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 1 )
 
-[node name="Dice" type="Control" parent="."]
+[node name="Dice" type="Control" parent="Roll Screen"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -417,33 +419,33 @@ margin_top = -20.0
 margin_right = 20.0
 margin_bottom = 20.0
 
-[node name="Background" type="Sprite" parent="Dice"]
+[node name="Background" type="Sprite" parent="Roll Screen/Dice"]
 modulate = Color( 1, 1, 1, 0 )
 scale = Vector2( 4, 4 )
 texture = ExtResource( 2 )
 
-[node name="Dice" type="Sprite" parent="Dice"]
+[node name="Dice" type="Sprite" parent="Roll Screen/Dice"]
 material = SubResource( 5 )
 position = Vector2( -48, 0 )
 texture = ExtResource( 3 )
 vframes = 20
 
-[node name="Power" type="Sprite" parent="Dice"]
+[node name="Power" type="Sprite" parent="Roll Screen/Dice"]
 scale = Vector2( 1e-05, 1e-05 )
 texture = ExtResource( 4 )
 
-[node name="Background Anim" type="AnimationPlayer" parent="."]
+[node name="Background Anim" type="AnimationPlayer" parent="Roll Screen"]
 "anims/Fade In" = SubResource( 1 )
 "anims/Fade Out" = SubResource( 3 )
 anims/RESET = SubResource( 2 )
 
-[node name="DiceRoll" type="AnimationPlayer" parent="."]
+[node name="DiceRoll" type="AnimationPlayer" parent="Roll Screen"]
 anims/RESET = SubResource( 6 )
 anims/d4Roll = SubResource( 7 )
 
-[node name="Power Anim" type="AnimationPlayer" parent="."]
+[node name="Power Anim" type="AnimationPlayer" parent="Roll Screen"]
 "anims/Power Pop" = SubResource( 8 )
 
-[connection signal="animation_finished" from="Background Anim" to="." method="_on_AnimationPlayer_animation_finished"]
-[connection signal="animation_finished" from="DiceRoll" to="." method="_on_DiceRoll_animation_finished"]
-[connection signal="animation_finished" from="Power Anim" to="." method="_on_Power_Anim_animation_finished"]
+[connection signal="animation_finished" from="Roll Screen/Background Anim" to="Roll Screen" method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_finished" from="Roll Screen/DiceRoll" to="Roll Screen" method="_on_DiceRoll_animation_finished"]
+[connection signal="animation_finished" from="Roll Screen/Power Anim" to="Roll Screen" method="_on_Power_Anim_animation_finished"]
