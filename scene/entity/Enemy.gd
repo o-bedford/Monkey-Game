@@ -3,6 +3,7 @@ extends KinematicBody2D
 var speed = 60
 var velocity = Vector2.ZERO
 var facing
+var health = 2
 
 export(int, "Fire", "Elec", "Rock", "Midas") var holding_power
 
@@ -61,6 +62,9 @@ func squash():
 	
 func burn():
 	if !is_burning:
+		health -= 1
+		if health <= 0:
+			death()
 		is_burning = true
 		var burn_sprite = Sprite.new()
 		burn_sprite.texture = load("res://assets/img/entity/enemies/fireTEMP.png")
@@ -100,6 +104,9 @@ func set_facing():
 #		print("in range! right")
 	else:
 		see_player = false
+
+func death():
+	queue_free()
 
 func _on_Shock_Field_body_entered(body):
 	if body.has_method("shock") && is_shocked && !body.is_shocked:
