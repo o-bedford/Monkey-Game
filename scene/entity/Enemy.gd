@@ -3,6 +3,7 @@ extends KinematicBody2D
 var speed = 60
 var velocity = Vector2.ZERO
 var facing
+var health = 2
 
 export(int, "Fire", "Elec", "Rock", "Midas") var holding_power
 
@@ -10,18 +11,23 @@ var is_squashed
 var squash_count = 0
 var player
 var see_player = false
+var can_attack = true
 
 var is_shocked = false
 var is_burning = false
 const BURN = preload("res://scene/entity/Burn.tscn")
 
+
+
 var midas_state = false
 
 var is_shocked = false
+
 var ELECTRIC_BALL = preload("res://scene/entity/ElectricBall.tscn")
 
 var t = 0.0
 var target
+
 
 func _ready():
 	print(str(holding_power))
@@ -50,16 +56,23 @@ func get_power():
 	return holding_power
 
 func squash():
-	squash_count += 1
+	health -= 1
+	if health <= 0:
+		death()
+	speed = 0
 	is_squashed = true
 	$Sprite.scale.y = 0.25
 	velocity.x = 0
-	yield(get_tree().create_timer(1), "timeout")
+	yield(get_tree().create_timer(0.4), "timeout")
+	speed = 60
 	$Sprite.scale.y = 1
 	is_squashed = false
 	
 func burn():
 	if !is_burning:
+		health -= 1
+		if health <= 0:
+			death()
 		is_burning = true
 		var burn_sprite = Sprite.new()
 		burn_sprite.texture = load("res://assets/img/entity/enemies/fireTEMP.png")
@@ -74,14 +87,27 @@ func burn():
 
 func shock():
 	if !is_shocked:
+		speed = 0
 		is_shocked = true
+		can_attack = false
+		health -= 1
+		if health <= 0:
+			death()
 		var shock_sprite = Sprite.new()
 		shock_sprite.texture = load("res://assets/img/entity/enemies/electricityTEMP.png")
 		add_child(shock_sprite)
+<<<<<<< HEAD
 		
 func freeze():
 	velocity = Vector2.ZERO
 	print("freeze")
+=======
+		yield(get_tree().create_timer(2), "timeout")
+		can_attack = true
+		speed = 60
+		is_shocked = false
+		remove_child(shock_sprite)
+>>>>>>> 2c1271e25b4e82c7f249c3655f1aecc26c2afa83
 
 func set_facing():
 	if player.get_node("Walkbox").global_position.x < $CollisionShape2D.global_position.x - 22:
@@ -101,6 +127,9 @@ func set_facing():
 #		print("in range! right")
 	else:
 		see_player = false
+
+func death():
+	queue_free()
 
 func _on_Shock_Field_body_entered(body):
 	if body.has_method("shock") && is_shocked && !body.is_shocked:

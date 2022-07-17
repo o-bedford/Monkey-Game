@@ -48,7 +48,8 @@ func _ready():
 		dice_powers = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 	$"Hitbox/Hit Shape".disabled = true
 	emit_signal("life_changed", max_hearts)
-	
+	#DELETE THIS LATER THIS IS TO TEST
+	active_power = 1
 func _process(delta):
 	if dice_powers.size() > 6:
 		dice_powers.remove(0);
@@ -91,7 +92,7 @@ func _physics_process(delta):
 
 func _input(event):
 	# If the player is able to cube smash, do it. Hide dice face sprites, apply hit texture, wait a bit, and reset
-	if event.is_action_pressed("steal_attack") and hitCanBePressed and can_move:
+	if event.is_action_pressed("steal_attack") and hitCanBePressed and can_move and is_on_floor():
 		$"Hitbox/Hit Shape".disabled = false
 		hitCanBePressed = false
 		if Dice1 is Sprite:
@@ -101,7 +102,9 @@ func _input(event):
 		if Dice3 is Sprite:
 			Dice3.visible = false
 		$"Player Sprite".texture = hit_tex
-		yield(get_tree().create_timer(0.7), "timeout")
+		can_move = false
+		yield(get_tree().create_timer(0.4), "timeout")
+		can_move = true
 		$"Player Sprite".texture = normal_tex
 		if Dice1 is Sprite:
 			Dice1.visible = true
@@ -213,7 +216,7 @@ func damage(dam: int):
 	hearts -= dam * 1
 	emit_signal("life_changed", hearts)
 	if hearts <= 0:
-		return "Player is dead"
+		get_tree().change_scene("res://scene/Menu Scene/Death_menu/death_menu.tscn")
 
 func _on_Hurtbox_body_entered(body):
 	print("this is working")
