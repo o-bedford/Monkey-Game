@@ -38,8 +38,7 @@ var Dice3
 var FIREBALL = preload("res://scene/entity/Fireball.tscn")
 var ELECTRIC_BALL = preload("res://scene/entity/ElectricBall.tscn")
 var ROCK = preload("res://assets/img/entity/player/rockTEMP.png")
-# remove later maybe
-var default = preload("res://assets/img/entity/player/playerTEMP.png") 
+var MIDAS = preload("res://assets/img/entity/player/playerGOLDTEMP.png")
 
 var is_rock = false
 
@@ -183,8 +182,13 @@ func _input(event):
 				_on_Hitbox_body_entered($Hurtbox/Walkbox)"""
 			yield(get_tree().create_timer(.5), "timeout")
 			GRAVITY = 30
-			$"Player Sprite".set_texture(default)
-			
+			$"Player Sprite".set_texture(normal_tex)
+		if active_power == 3:
+			$"Player Sprite".set_texture(MIDAS)
+			$Midas/CollisionShape2D.set_deferred("disabled", false)
+			yield(get_tree().create_timer(5), "timeout")
+			$Midas/CollisionShape2D.set_deferred("disabled", true)
+			$"Player Sprite".set_texture(normal_tex)
 
 # Makes the game less annoying
 func coyoteTime():
@@ -261,3 +265,8 @@ func _on_Hurtbox_body_entered(body):
 
 func _on_Hitbox_body_entered(body):
 	on_ground = true
+
+
+func _on_Midas_body_entered(body):
+	if body.is_in_group("Enemies"):
+		body.freeze()

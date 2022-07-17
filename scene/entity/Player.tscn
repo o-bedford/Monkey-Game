@@ -31,6 +31,11 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 4, 5, 6, 7, 8, 9, 9, 0 ]
 }
 
+[sub_resource type="CapsuleShape2D" id=4]
+radius = 96.0
+height = 176.0
+
+
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 21, 299 )
 collision_layer = 2
@@ -72,9 +77,23 @@ shape = SubResource( 3 )
 [node name="Position2D" type="Position2D" parent="."]
 position = Vector2( 72, 15 )
 
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Steal_attack = SubResource( 4 )
+
+[node name="Midas" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Midas"]
+position = Vector2( 3, 5 )
+rotation = 1.5708
+shape = SubResource( 4 )
+disabled = true
+
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_Hitbox_body_entered"]
 [connection signal="body_entered" from="Hitbox" to="." method="_on_Area2D_body_entered"]
 [connection signal="body_entered" from="Hurtbox" to="." method="_on_Hurtbox_body_entered"]
+[connection signal="area_shape_entered" from="Midas" to="." method="_on_Midas_area_shape_entered"]
+[connection signal="body_entered" from="Midas" to="." method="_on_Midas_body_entered"]
