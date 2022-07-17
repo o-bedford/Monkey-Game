@@ -14,6 +14,9 @@ var normal_tex = load("res://assets/img/entity/player/playerTEMP.png")
 var hit_tex = load("res://assets/img/entity/player/playerTEMPHIT.png")
 
 var velocity = Vector2.ZERO
+var knockback = Vector2.ZERO
+var knockback_speed = 300
+var knockback_direction = Vector2.ZERO
 var canJumpButMightNotBeTouchingGround = true
 var jumpJustPressed = false
 var hitCanBePressed = true
@@ -52,7 +55,22 @@ func _ready():
 	
 func _process(delta):
 	if dice_powers.size() > 6:
-		dice_powers.remove(0);
+		dice_powers.remove(0)
+	if $"Hitbox/Hit Shape".disabled == false:
+		for body in $Hitbox.get_overlapping_bodies():
+			print(body.name)
+			if "Enemy" in body.name:
+				print("overlap")
+				if !enemies_has_hit.has(body):
+					if last_slot < dice_powers.size():
+						dice_powers[last_slot] = body.get_power()
+						last_slot += 1
+					else:
+						dice_powers.remove(0)
+						dice_powers.append(body.get_power())
+					can_roll = true
+				body.get_node("AnimationPlayer").play("hurt")
+				enemies_has_hit.append(body)
 
 func _physics_process(delta):
 	
@@ -61,10 +79,13 @@ func _physics_process(delta):
 		canJumpButMightNotBeTouchingGround = true
 		if jumpJustPressed:
 			velocity.y = JUMP_SPEED
+		can_roll = true
 	
-	if !is_on_floor() && can_move:
-		coyoteTime()
-		velocity.y += GRAVITY
+	if !is_on_floor():
+		can_roll = false
+		if can_move:
+			coyoteTime()
+			velocity.y += GRAVITY
 	
 	if Input.is_action_just_pressed("ui_up") and can_move:
 		jumpJustPressed = true;
@@ -87,12 +108,14 @@ func _physics_process(delta):
 			$Position2D.position.x *= -1
 	
 	if can_move:
-		velocity = move_and_slide(velocity, Vector2.UP)
-		velocity.x = lerp(velocity.x, 0, 0.2)
+		velocity = move_and_slide(velocity + knockback, Vector2.UP)
+	
+	knockback = lerp(knockback, Vector2.ZERO, 0.1)
+	velocity.x = lerp(velocity.x, 0, 0.2)
 
 func _input(event):
 	# If the player is able to cube smash, do it. Hide dice face sprites, apply hit texture, wait a bit, and reset
-	if event.is_action_pressed("steal_attack") and hitCanBePressed and can_move and is_on_floor():
+	if event.is_action_pressed("steal_attack") and hitCanBePressed and is_on_floor():
 		$"Hitbox/Hit Shape".disabled = false
 		hitCanBePressed = false
 		if Dice1 is Sprite:
@@ -102,9 +125,7 @@ func _input(event):
 		if Dice3 is Sprite:
 			Dice3.visible = false
 		$"Player Sprite".texture = hit_tex
-		can_move = false
 		yield(get_tree().create_timer(0.4), "timeout")
-		can_move = true
 		$"Player Sprite".texture = normal_tex
 		if Dice1 is Sprite:
 			Dice1.visible = true
@@ -170,19 +191,20 @@ func rememberJumpTime():
 	yield(get_tree().create_timer(.1), "timeout")
 	jumpJustPressed = false
 
-func _on_Area2D_body_entered(body):
-	if body.has_method("get_power"):
-		print(body.holding_power)
-		if !enemies_has_hit.has(body):
-			if last_slot < dice_powers.size():
-				dice_powers[last_slot] = body.get_power()
-				last_slot += 1
-			else:
-				dice_powers.remove(0)
-				dice_powers.append(body.get_power())
-			can_roll = true
-		body.squash()
-		enemies_has_hit.append(body)
+#func _on_Area2D_body_entered(body):
+#	if body.has_method("get_power"):
+#		print(body.holding_power)
+#		if !enemies_has_hit.has(body):
+#			print("enter")
+#			if last_slot < dice_powers.size():
+#				dice_powers[last_slot] = body.get_power()
+#				last_slot += 1
+#			else:
+#				dice_powers.remove(0)
+#				dice_powers.append(body.get_power())
+#			can_roll = true
+#		body.get_node("AnimationPlayer").play("hurt")
+#		enemies_has_hit.append(body)
 
 func setDiceSprites():
 	if dice_powers.size() > 0 && dice_powers[0] != null:
@@ -210,13 +232,27 @@ func pick_power():
 func damage(dam: int):
 	hearts -= dam * 1
 	emit_signal("life_changed", hearts)
-	if hearts <= 0:
+	if hearts < 0:
 		get_tree().change_scene("res://scene/Menu Scene/Death_menu/death_menu.tscn")
+	modulate = Color(1,1,1,0)
+	yield(get_tree().create_timer(.05), "timeout")
+	modulate = Color(1,1,1,1)
+	yield(get_tree().create_timer(.05), "timeout")
+	modulate = Color(1,1,1,0)
+	yield(get_tree().create_timer(.05), "timeout")
+	modulate = Color(1,1,1,1)
+
+func knockback(enemy):
+	if position.x < enemy.position.x:
+		velocity.x = -100
+	if position.x > enemy.position.x:
+		velocity.x = 100
 
 func _on_Hurtbox_body_entered(body):
-#	print("this is working")
-#	damage(1)
-	pass
+	if body.is_in_group("Enemies"):
+		knockback_direction = (global_position - body.global_position).normalized()
+		knockback = knockback_direction * knockback_speed
+		damage(1)
 
 
 func _on_Hitbox_body_entered(body):

@@ -18,3 +18,4 @@ func _ready():
 	self.maxHearts = PlayerStats.maxHealth
 	self.hearts = PlayerStats.health
 	PlayerStats.connect("health_changed", self, "set_hearts")
+	
