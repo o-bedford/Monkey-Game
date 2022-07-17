@@ -11,6 +11,7 @@ var squash_count = 0
 var player
 var see_player = false
 
+var is_shocked = false
 var is_burning = false
 const BURN = preload("res://scene/entity/Burn.tscn")
 
@@ -78,7 +79,9 @@ func shock():
 		shock_sprite.texture = load("res://assets/img/entity/enemies/electricityTEMP.png")
 		add_child(shock_sprite)
 		
-		
+func freeze():
+	velocity = Vector2.ZERO
+	print("freeze")
 
 func set_facing():
 	if player.get_node("Walkbox").global_position.x < $CollisionShape2D.global_position.x - 22:
