@@ -14,6 +14,8 @@ var see_player = false
 var is_burning
 const BURN = preload("res://scene/entity/Burn.tscn")
 
+var midas_state = false
+
 func _ready():
 	print(str(holding_power))
 	player = get_parent().get_node("Player")
@@ -21,6 +23,8 @@ func _ready():
 	facing = -1
 
 func _process(delta):
+	if midas_state == true:
+		velocity = Vector2.ZERO
 	if squash_count > 2:
 		queue_free()
 
