@@ -13,12 +13,14 @@ var player
 var see_player = false
 var can_attack = true
 
-var is_shocked = false
 var is_burning = false
 const BURN = preload("res://scene/entity/Burn.tscn")
 
 
+
 var midas_state = false
+
+var is_shocked = false
 
 var ELECTRIC_BALL = preload("res://scene/entity/ElectricBall.tscn")
 

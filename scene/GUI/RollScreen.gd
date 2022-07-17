@@ -3,6 +3,8 @@ extends Control
 var fire_tex = preload("res://assets/img/GUI/fireTEMP.png")
 var elec_tex = preload("res://assets/img/entity/player/elecballTEMP.png")
 var no_power = preload("res://assets/img/GUI/noPowerTEMP.png")
+var d4 = preload("res://assets/img/GUI/d4RollSheet_slim.png")
+var d6 = preload("res://assets/img/GUI/d6RollSheet_slim.png")
 
 func _ready():
 	$ColorRect.color = Color(0,0,0,0)
@@ -28,6 +30,12 @@ func set_power(power):
 		$Dice/Power.texture = fire_tex
 	if power == 1:
 		$Dice/Power.texture = elec_tex
+
+func set_dice(dice):
+	if dice == 0:
+		$Dice/Dice.texture = d4
+	if dice == 1:
+		$Dice/Dice.texture = d6
 
 func _on_DiceRoll_animation_finished(anim_name):
 	if anim_name == "d4Roll":

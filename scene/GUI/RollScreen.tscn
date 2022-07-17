@@ -431,7 +431,6 @@ texture = ExtResource( 3 )
 vframes = 20
 
 [node name="Power" type="Sprite" parent="Roll Screen/Dice"]
-scale = Vector2( 1e-05, 1e-05 )
 texture = ExtResource( 4 )
 
 [node name="Background Anim" type="AnimationPlayer" parent="Roll Screen"]

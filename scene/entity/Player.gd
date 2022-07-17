@@ -19,6 +19,7 @@ var jumpJustPressed = false
 var hitCanBePressed = true
 var can_move = true
 var can_roll = false
+var on_ground = false
 
 var active_power
 
@@ -31,6 +32,11 @@ var Dice2
 var Dice3
 var FIREBALL = preload("res://scene/entity/Fireball.tscn")
 var ELECTRIC_BALL = preload("res://scene/entity/ElectricBall.tscn")
+var ROCK = preload("res://assets/img/entity/player/rockTEMP.png")
+# remove later maybe
+var default = preload("res://assets/img/entity/player/playerTEMP.png") 
+
+var is_rock = false
 
 func _ready():
 	if dice_size == 0:
@@ -139,8 +145,22 @@ func _input(event):
 			elecball.linear_velocity.y = -400
 			get_parent().add_child(elecball)
 			elecball.position = $Position2D.global_position
+		if active_power == 2:
+			$"Player Sprite".set_texture(ROCK)
+			velocity.y = JUMP_SPEED * 1.5
+			yield(get_tree().create_timer(.5), "timeout")
+			GRAVITY = 300
+			"""yield(get_tree().create_timer(.5), "timeout")
+			GRAVITY = 300
+			yield(get_tree().create_timer(.5), "timeout")
+			GRAVITY = 30
+			$"Player Sprite".set_texture(default)
+			while on_ground == false:
+				_on_Hitbox_body_entered($Hurtbox/Walkbox)"""
+			yield(get_tree().create_timer(.5), "timeout")
+			GRAVITY = 30
+			$"Player Sprite".set_texture(default)
 			
-
 
 # Makes the game less annoying
 func coyoteTime():
@@ -197,3 +217,7 @@ func damage(dam: int):
 func _on_Hurtbox_body_entered(body):
 	print("this is working")
 	damage(1)
+
+
+func _on_Hitbox_body_entered(body):
+	on_ground = true
